@@ -3,7 +3,6 @@ import timeit
 
 import fdp_original
 import fdp_numpy
-import fdp_verbose
 from numpy import array_equal
 
 class TestCorrectOutput (unittest.TestCase):
@@ -24,9 +23,6 @@ class TestCorrectOutput (unittest.TestCase):
     def test_numpy (self):
         self.perform_test(fdp_numpy.encode)
 
-    def test_verbose (self):
-        self.perform_test(fdp_verbose.encode)
-
 
 class TimeAlgorithms (unittest.TestCase):
 
@@ -44,9 +40,6 @@ class TimeAlgorithms (unittest.TestCase):
 
     def test_time_numpy (self):
         self.time('fdp_numpy')
-
-    def test_time_verbose (self):
-        self.time('fdp_verbose')
 
 if __name__ == '__main__':
     unittest.main()
