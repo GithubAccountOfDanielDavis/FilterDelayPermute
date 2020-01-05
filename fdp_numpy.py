@@ -9,13 +9,14 @@ def encode (secret: bytes, delay_length=512, iterations=20):
     if len(secret) > 0:
         echoes[-len(secret):] = list(secret)
     echoes[0] = UNPERMUTE[echoes[0]] # backwards compatibility
+    state = 0
 
     # Create accumulator ufunc which generates a "running total"-like array
     integrate = frompyfunc(
         lambda s, e: (s - (s >> 4) + e), # "shrink" state and "integrate"
         2, 1) # 2 inputs, 1 output
 
-    state = 0
+    # encode the block {iterations} times
     for _ in range(iterations):
 
         # "permute" entire block of echoes at once
