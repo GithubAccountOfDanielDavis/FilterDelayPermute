@@ -45,3 +45,8 @@ UNPERMUTE = array([
     192,  20, 205,  92, 179,  42, 105, 232,   6,  77, 165,  62,  75,
     116, 226, 162, 136, 103, 214,  26, 129, 247
 ], dtype=uint16)
+
+if __name__ == '__main__':
+    print("You're not really supposed to run lookup_tables.py by itself. It's")
+    print("just a way to share and declutter these big tables of numbers at")
+    print("the top of files ...but who am I to tell you what to do?")

@@ -38,3 +38,9 @@ def encode (secret: bytes, delay_length=512, iterations=20, bw_compatible=True):
     if bw_compatible:
         echoes = roll(echoes, len(secret))
     return state, echoes
+
+if __name__ == '__main__':
+    state, echoes = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    print('State:', state)
+    print('Delay line:')
+    print(echoes)

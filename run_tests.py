@@ -32,8 +32,8 @@ class TimeAlgorithms (unittest.TestCase):
         statement = 'encode(secrets.token_bytes(40))'
         seconds = timeit.timeit(statement, setup=setup, number=REPETITIONS)
         seconds /= REPETITIONS
-        milliseconds = seconds * 1000
-        print(f'{name} time: {REPETITIONS} loops, average {milliseconds:.2f} msec')
+        millisecs = seconds * 1000
+        print(f'{name} time: {REPETITIONS} loops, average {millisecs:.2f} msec')
 
     def test_time_original (self):
         self.time('fdp_original')
@@ -42,4 +42,5 @@ class TimeAlgorithms (unittest.TestCase):
         self.time('fdp_numpy')
 
 if __name__ == '__main__':
+    print("Running FilterDelayPermute tests (should take less than 10 seconds)")
     unittest.main()

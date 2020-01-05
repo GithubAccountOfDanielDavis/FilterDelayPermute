@@ -79,7 +79,7 @@ if __name__ == "__main__": # Added conditional console printing
     state, delay_line = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('State: {}'.format(state))
     print()
-    print('Delay line:\n', list(delay_line))
+    print('Delay line:\n', delay_line)
 
 """
 The challenge: the short Python code found here produces this as output:

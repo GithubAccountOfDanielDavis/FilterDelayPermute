@@ -3,6 +3,9 @@
 ## What is this?
 This repo is my testing and analysis of a hashing algorithm provided by [larsupilami73](https://www.reddit.com/user/larsupilami73) on Reddit. The original challenge can be found [here](https://www.reddit.com/r/codes/comments/e9uctm/challenge_delayfilterpermute/). If the included pastebin or original post go down, fdp_original.py is a mostly unaltered version of the code and includes the secret message to be decoded as proof of completing the challenge.
 
+## Quickstart
+If you wanna jump right in, you can run any of the .py files and check out their output. fdp_numpy.py and fdp_original.py give you an idea of the intended hashed output and run_tests.py will make sure the results are correct for our one measly case and do benchmarking as well.
+
 ## Optimizations
 I've performed several rounds of optimizations on the original code in order to get to know it better. All in all, my version makes much better use of numpy's parallel computation features and is nearly an order of magnitude faster (4 vs 26 milliseconds on my machine). I've also written a few versions in c, but fairly benchmarking them would involve getting into the c apis or compiling via cython and I'm already in too deep, so I haven't included them here.
 
