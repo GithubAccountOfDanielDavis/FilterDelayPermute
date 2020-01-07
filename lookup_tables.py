@@ -46,7 +46,7 @@ UNPERMUTE = array([
     116, 226, 162, 136, 103, 214,  26, 129, 247
 ], dtype=uint16)
 
-GIVEN_ECHOES = array([
+GIVEN_BLOCK = array([
      76, 238, 249, 235,  23,  45,  52, 251, 132,  75,  93,  25, 233, 217, 159,
     198,  63,  23,  64,  38, 112,   3,  66, 168,   4, 110,  93,  77,  42,  34,
      29,  34, 164, 113,  84,  77,  66,   2, 208, 243,  61,  51,  16, 203, 145,
@@ -86,9 +86,13 @@ GIVEN_ECHOES = array([
 
 GIVEN_STATE = uint16(32668)
 
-SHRINK = array([
-    state - (state >> 4)
-    for state in arange(0x10000, dtype=uint16)
+ALL_UINT8 = arange(0x0100, dtype=uint16)
+
+LOST_ECHO_BITS = (ALL_UINT8 & 0x0007) | ((ALL_UINT8 & 0x00F8) << 8)
+
+UNECHO = array([
+    LOST_ECHO_BITS | (echo << 3)
+    for echo in ALL_UINT8
 ], dtype=uint16)
 
 if __name__ == '__main__':

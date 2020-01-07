@@ -1,53 +1,35 @@
-from numpy import uint16, array, arange, fromiter, bitwise_or, add, isin, all, roll
-from lookup_tables import GIVEN_ECHOES, GIVEN_STATE, PERMUTE, SHRINK
+import numpy as np
+import lookup_tables as lt
 
-ALL_UINT8 = arange(0x0100, dtype=uint16)
-LOST_ECHO_BITS = (ALL_UINT8 & 0x0007) | ((ALL_UINT8 & 0x00F8) << 8)
+frame_type = np.dtype([
+    ('old_echo', np.uint16),
+    ('input_state', np.uint16),
+    ('output_state', np.uint16)
+])
 
-def thingy (input_states, output_states):
-    #old_echo_cands = ALL_UINT8
-    #input_permuted_echoes = PERMUTE[old_echo_cands]
+def prev_frames (prev_states, next_states, old_echoes=lt.ALL_UINT8):
+    shrunken_states = prev_states - (prev_states >> 4)
+    permuted_echoes = lt.PERMUTE[old_echoes] << 4
+    filtered_states = np.add.outer(permuted_echoes, shrunken_states)
+    valid_mask = np.isin(filtered_states, next_states)
 
-    input_shrunken_states = SHRINK[input_states]
-    input_interim_states = add.outer(PERMUTE, input_shrunken_states)
-    input_results_mask = [all(row) for row in in1d(input_results, output_results)]
-    return intersect1d(output_states_from_input_cands, possible_output_states)
+    frames = np.empty(filtered_states.shape, dtype=frame_type)
+    echo_indices, state_indices = np.indices(filtered_states.shape)
+    frames['old_echo'] = old_echoes[echo_indices]
+    frames['input_state'] = prev_states[state_indices]
+    frames['output_state'] = filtered_states
+    return frames.flatten()[valid_mask.flatten()]
 
-def decode (echoes, ending_state):
+def decode(block, final_state):
     SECRET_LENGTH = 40 # Assume for now
-    echoes = roll(echoes, -SECRET_LENGTH)
+    block = np.roll(block, -SECRET_LENGTH)
 
-    # Get input and output states for all but the first echo
-    state_cands = bitwise_or.outer(echoes << 3, LOST_ECHO_BITS) # 256 cands sublist for each echo
-    input_state_cands = state_cands[:-1] # Ignore last sample because we already know the input for the next block
-    output_state_cands = state_cands[1:] # Ignore first sample because we cna't get the inputs for it yet
-
-    old_echo_cands = array([ALL_UINT8 for echo in echoes[1:]], dtype=uint16)
-    permuted_echo_cands = PERMUTE[old_echo_cands]
-
-    input_shrunken_states = SHRINK[input_state_cands]
-    input_result_states = array([
-        add.outer(echo, state)
-        for state, echo in zip(input_shrunken_states, permuted_echo_cands)
-    ], dtype=uint16)
-
-    input_result_mask = array([
-        isin(i, o) for i, o in zip(input_result_states, output_state_cands)
-    ])
-
-    # First axis is a slot for each echo
-    # Second axis is old echo candidates
-    # Third axis is states per old echo
-
-    echo_mask = array([
-        [all(echo_cand) for echo_cand in echo_slot]
-        for echo_slot in input_result_mask
-    ], dtype=uint16)
-
-    old_echo_cands = old_echo_cands[echo_mask]
-    
-    print(old_echo_cands)
-    print(old_echo_cands.shape)
-    print(old_echo_cands.size)
-
-decode(GIVEN_ECHOES, GIVEN_STATE)
+    frames = []
+    next_state_cands = np.array([final_state], dtype=np.uint16)
+    for i in range(len(block) - 1, 0, -1):
+        prev_state_cands = lt.UNECHO[block[i - 1]]
+        frames.append(prev_frames(prev_state_cands, next_state_cands))
+        next_state_cands = frames[-1]['input_state']
+    prev_state_cands = lt.UNECHO[frames[0]['old_echo']].flatten()
+    frames.append(prev_frames(prev_state_cands, next_state_cands))
+    return frames
