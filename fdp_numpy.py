@@ -1,4 +1,4 @@
-from numpy import uint16, zeros, roll, frompyfunc, concatenate, object as obj
+from numpy import uint16, zeros, roll, frompyfunc, concatenate, object as obj, array2string
 from lookup_tables import PERMUTE, UNPERMUTE
 
 def encode (secret: bytes, delay_length=512, iterations=20, bw_compatible=True):
@@ -33,7 +33,7 @@ def encode (secret: bytes, delay_length=512, iterations=20, bw_compatible=True):
         state, interim_states = interim_states[-1],  interim_states[1:]
 
         # "echo" entire block of states at once
-        echoes = (interim_states >> 3) & 0xF00FF
+        echoes = (interim_states >> 3) & 0x00FF
 
     if bw_compatible:
         echoes = roll(echoes, len(secret))
@@ -43,4 +43,4 @@ if __name__ == '__main__':
     state, echoes = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('State:', state)
     print('Delay line:')
-    print(echoes)
+    print(array2string(echoes, separator=', '))
