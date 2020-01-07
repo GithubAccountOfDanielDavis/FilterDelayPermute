@@ -2,7 +2,7 @@ import unittest
 import timeit
 
 import fdp_original
-import fdp_numpy
+import fdp_optimized
 from numpy import array_equal
 
 class TestCorrectOutput (unittest.TestCase):
@@ -20,8 +20,8 @@ class TestCorrectOutput (unittest.TestCase):
         self.assertEqual(state, self.expected_state)
         self.assertTrue(array_equal(echoes, self.expected_echoes))
 
-    def test_numpy (self):
-        self.perform_test(fdp_numpy.encode)
+    def test_optimized (self):
+        self.perform_test(fdp_optimized.encode)
 
 
 class TimeAlgorithms (unittest.TestCase):
@@ -38,8 +38,8 @@ class TimeAlgorithms (unittest.TestCase):
     def test_time_original (self):
         self.time('fdp_original')
 
-    def test_time_numpy (self):
-        self.time('fdp_numpy')
+    def test_time_optimized (self):
+        self.time('fdp_optimized')
 
 if __name__ == '__main__':
     print("Running FilterDelayPermute tests (should take less than 10 seconds)")
