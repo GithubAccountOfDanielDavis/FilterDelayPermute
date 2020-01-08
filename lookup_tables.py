@@ -96,6 +96,9 @@ UNECHO = array([
 ], dtype=uint16)
 
 if __name__ == '__main__':
-    print("You're not really supposed to run lookup_tables.py by itself. It's")
-    print("just a way to share and declutter these big tables of numbers at")
-    print("the top of files ...but who am I to tell you what to do?")
+    print("lookup_tables.py originally started as a way to share and declutter")
+    print("big tables of numbers at the top of files. Now, in a couple cases,")
+    print("it serves as a repository of precomputed numpy arrays to make")
+    print("calculations with multidimensional arrays faster and easier to")
+    print("understand. The major exception is SHRINK, which existed here, but")
+    print("slowed down fdp_optimized by several orders of magnitude")

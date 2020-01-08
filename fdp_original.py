@@ -76,6 +76,11 @@ def encode (secret: bytes): # Wrapped these lines in a function for testing
 
 #the output
 if __name__ == "__main__": # Added conditional console printing
+    print("This is the original challenge file provided larsupilami73.")
+    print("It has been unaltered as much as possible and all changes are noted")
+    print("in comments, aside from the text here, which is pretty")
+    print("self-evident. The following is the output of the original file:")
+    print()
     state, delay_line = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('State: {}'.format(state))
     print()

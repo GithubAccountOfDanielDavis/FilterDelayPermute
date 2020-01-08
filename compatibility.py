@@ -27,3 +27,10 @@ def roll_output_block (
 def numpy_ufunc (inputs: int, outputs: int):
     """Decorator for creating a numpy ufunc from a python function"""
     return lambda function: frompyfunc(function, inputs, outputs)
+
+if __name__ == '__main__':
+    print("compatibility.py serves several purposes. It cleans up the code in")
+    print("fdp_optimized.encode, allows for future versions of the algorithm")
+    print("which don't have to exactly match the output of fdp_original, and")
+    print("it makes initial block creation and output independent from")
+    print("encoding, as they will eventually be used by fdp_decode.")

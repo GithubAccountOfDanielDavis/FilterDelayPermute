@@ -43,4 +43,8 @@ class TimeAlgorithms (unittest.TestCase):
 
 if __name__ == '__main__':
     print("Running FilterDelayPermute tests (should take less than 10 seconds)")
+    print("Currently, this file:")
+    print('\t', "* tests the correctness of fdp_optimized.encode")
+    print('\t', "* times both the original encoding and the optimized one")
+    print()
     unittest.main()

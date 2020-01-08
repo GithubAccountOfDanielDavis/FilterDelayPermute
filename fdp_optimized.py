@@ -39,6 +39,11 @@ def encode (
     return state, block
 
 if __name__ == '__main__':
+    print("fdp_optimized.py is the result of me learning how the original file")
+    print("worked as well as learning the basics of numpy. The following")
+    print("output should match the output of fdp_original.py, but this can be")
+    print("tested automatically with run_tests.py")
+    print()
     state, echoes = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('State:', state)
     print('Delay line:')
