@@ -1,42 +1,43 @@
 #!/usr/bin/python3
-#delay-filter-permute hashing
-#larsupilami73
+# delay-filter-permute hashing
+# larsupilami73
 
 import numpy as np
 
-#the secret...good luck!
-#the_secret = b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+# the secret...good luck!
+# the_secret = b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-#hints
+# hints
 # Commented these two lines out
-#print(len(the_secret)) #returns 40
-#print(the_secret.isascii()) # returns True
+# print(len(the_secret)) #returns 40
+# print(the_secret.isascii()) # returns True
 
 
-#a 256-entry permutation table
-permlookuptable = np.array([228,   6,  79, 206, 117, 185, 242, 167,   9,  30, 180, 222, 230,
-       217, 136,  68, 199,  15,  96,  24, 235,  19, 120, 152,  33, 124,
-       253, 208,  10, 164, 184,  97, 148, 190, 223,  25,  86,  18,  75,
-       137, 196, 176, 239, 181,  45,  66,  16,  67, 215, 201, 177,  38,
-       143,  84,  55, 220, 104, 139, 127,  60, 101, 172, 245, 126, 225,
-       144, 108, 178,  73, 114, 158,  69, 141, 109, 115, 246, 113, 243,
-        90,  29, 170,  82, 111,   5,  56, 132, 154, 162,  65, 186,  85,
-       219, 237,  31,  12,  35,  28,  42, 112,  22, 125,  93, 173, 251,
-        51, 240,  95, 146, 204,  76,  41, 119, 155,  78, 150,  26, 247,
-       168, 118, 193, 140,   0,   2,  77,  46, 100, 205, 159, 183, 254,
-        98,  36,  61, 200, 142,  11, 250, 224,  27, 231,   4, 122,  32,
-       147, 182, 138,  62, 135, 128, 232, 194,  70, 197,  64,  44, 165,
-       156,  40, 123, 153,  23, 192, 249,  81,  39, 244,  47,  94, 195,
-       161,  43, 145, 175,   3, 105,  53, 133, 233, 198, 238,  49, 163,
-        80,  34, 211,   7, 171, 216, 110,  91,  83, 229, 234,  89,   8,
-        13,  59, 221, 131,  17, 166,  72, 226, 134, 209, 236,  63,  54,
-       107,  50, 212, 174, 213, 189, 252, 207, 227, 169,  58, 218,  48,
-        88,  21,  57, 203, 160, 248, 187, 191, 129,  37, 157, 241,   1,
-        52, 149, 130, 151, 103,  99, 116,  87, 202,  74, 214, 210, 121,
-       255,  20, 188,  71, 106,  14,  92, 179, 102])
+# a 256-entry permutation table
+permlookuptable = np.array([
+    228,   6,  79, 206, 117, 185, 242, 167,   9,  30, 180, 222, 230,
+    217, 136,  68, 199,  15,  96,  24, 235,  19, 120, 152,  33, 124,
+    253, 208,  10, 164, 184,  97, 148, 190, 223,  25,  86,  18,  75,
+    137, 196, 176, 239, 181,  45,  66,  16,  67, 215, 201, 177,  38,
+    143,  84,  55, 220, 104, 139, 127,  60, 101, 172, 245, 126, 225,
+    144, 108, 178,  73, 114, 158,  69, 141, 109, 115, 246, 113, 243,
+    90,   29, 170,  82, 111,   5,  56, 132, 154, 162,  65, 186,  85,
+    219, 237,  31,  12,  35,  28,  42, 112,  22, 125,  93, 173, 251,
+    51,  240,  95, 146, 204,  76,  41, 119, 155,  78, 150,  26, 247,
+    168, 118, 193, 140,   0,   2,  77,  46, 100, 205, 159, 183, 254,
+    98,   36,  61, 200, 142,  11, 250, 224,  27, 231,   4, 122,  32,
+    147, 182, 138,  62, 135, 128, 232, 194,  70, 197,  64,  44, 165,
+    156,  40, 123, 153,  23, 192, 249,  81,  39, 244,  47,  94, 195,
+    161,  43, 145, 175,   3, 105,  53, 133, 233, 198, 238,  49, 163,
+    80,   34, 211,   7, 171, 216, 110,  91,  83, 229, 234,  89,   8,
+    13,   59, 221, 131,  17, 166,  72, 226, 134, 209, 236,  63,  54,
+    107,  50, 212, 174, 213, 189, 252, 207, 227, 169,  58, 218,  48,
+    88,   21,  57, 203, 160, 248, 187, 191, 129,  37, 157, 241,   1,
+    52,  149, 130, 151, 103,  99, 116,  87, 202,  74, 214, 210, 121,
+    255,  20, 188,  71, 106,  14,  92, 179, 102])
 
 
-#a simple delay line class
+# a simple delay line class
 class Delay:
     def __init__(self, n=512, dtype='uint16'):
         self.d = np.zeros(n, dtype=dtype)
@@ -57,30 +58,34 @@ class Delay:
     def get(self):
         return self.d[self.index]
 
-def encode (secret: bytes): # Wrapped these lines in a function for testing
-    #make a delay line
+
+def encode(secret: bytes):  # Wrapped these lines in a function for testing
+    # make a delay line
     N = 512
     delay = Delay(N)
 
-    #shift the ascii values of the secret in the delay line
+    # shift the ascii values of the secret in the delay line
     for c in secret:
         delay.advance(c)
 
-    #delay-filter-permute
-    state, perm = 0,0
+    # delay-filter-permute
+    state, perm = 0, 0
     for k in range(N*20):
-        state = state - (state>>4) + (perm<<4)
-        perm = permlookuptable[delay.advance((state>>3)  & 0x00FF)]
+        state = state - (state >> 4) + (perm << 4)
+        perm = permlookuptable[delay.advance((state >> 3) & 0x00FF)]
 
     return state, delay.d
 
-#the output
-if __name__ == "__main__": # Added conditional console printing
+
+# the output
+if __name__ == "__main__":  # Added conditional console printing
     print("This is the original challenge file provided larsupilami73.")
-    print("It has been unaltered as much as possible and all changes are noted")
-    print("in comments, aside from the text here, which is pretty")
-    print("self-evident. The following is the output of the original file:")
+    print("It has been unaltered as much as possible and all changes are")
+    print("noted in comments, aside from the text here, which is pretty")
+    print("self-evident, and minor formatting to suppress messages from")
+    print("pycodestyle, which are all accessible via the repository's history")
     print()
+    print("The following is the output of the original file:")
     state, delay_line = encode(b'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('State: {}'.format(state))
     print()
@@ -122,6 +127,8 @@ Delay line:
 167  39 235  92 154 163 196  26  25  13 168  54  22 251  73 117 150 220
 243 229   5 221  61  95 154  32]
 
-...given the correct (hint) 40-byte ascii secret sentence. Can you find what it is?
+...given the correct (hint) 40-byte ascii secret sentence.
+
+Can you find what it is?
 
 """

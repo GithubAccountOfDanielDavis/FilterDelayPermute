@@ -2,12 +2,14 @@ from numpy import uint16, ndarray, concatenate, object as obj
 from compatibility import block_from_secret, roll_output_block, numpy_ufunc
 from lookup_tables import PERMUTE
 
+
 @numpy_ufunc(2, 1)
-def filter_block (state: uint16, echo: uint16) -> uint16:
+def filter_block(state: uint16, echo: uint16) -> uint16:
     """Create accumulator ufunc which generates a "running total"-like array"""
     return state - (state >> 4) + echo
 
-def next_block (block: ndarray, state: uint16) -> (ndarray, uint16):
+
+def next_block(block: ndarray, state: uint16) -> (ndarray, uint16):
     """Encode an arbitrary-sized 1d block a single time (1 iteration)"""
 
     # PERMUTE
@@ -15,16 +17,17 @@ def next_block (block: ndarray, state: uint16) -> (ndarray, uint16):
 
     # FILTER
     filtered_states = filter_block.accumulate(
-        concatenate(([state], permuted_block)), # state is initial value
-        dtype=obj # np.frompyfunc requires casting to object and back
-    ).astype(uint16)[1:] # drop prev state
+        concatenate(([state], permuted_block)),  # state is initial value
+        dtype=obj  # np.frompyfunc requires casting to object and back
+    ).astype(uint16)[1:]  # drop prev state
 
     # ECHO
     next_state = filtered_states[-1]
     next_block = (filtered_states >> 3) & 0x00FF
     return next_block, next_state
 
-def encode (
+
+def encode(
         secret: bytes,
         block_size=512,
         iterations=20,
@@ -38,9 +41,10 @@ def encode (
     block = roll_output_block(block, len(secret), backwards_compatible)
     return state, block
 
+
 if __name__ == '__main__':
-    print("fdp_optimized.py is the result of me learning how the original file")
-    print("worked as well as learning the basics of numpy. The following")
+    print("fdp_optimized.py is the result of me learning how the original")
+    print("file worked as well as learning the basics of numpy. The following")
     print("output should match the output of fdp_original.py, but this can be")
     print("tested automatically with run_tests.py")
     print()

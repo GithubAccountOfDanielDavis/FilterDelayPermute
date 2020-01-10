@@ -7,7 +7,8 @@ frame_type = np.dtype([
     ('output_state', np.uint16)
 ])
 
-def prev_frames (prev_states, next_states, old_echoes=lt.ALL_UINT8):
+
+def prev_frames(prev_states, next_states, old_echoes=lt.ALL_UINT8):
     shrunken_states = prev_states - (prev_states >> 4)
     permuted_echoes = lt.PERMUTE[old_echoes] << 4
     filtered_states = np.add.outer(permuted_echoes, shrunken_states)
@@ -20,8 +21,9 @@ def prev_frames (prev_states, next_states, old_echoes=lt.ALL_UINT8):
     frames['output_state'] = filtered_states
     return frames.flatten()[valid_mask.flatten()]
 
+
 def decode(block, final_state):
-    SECRET_LENGTH = 40 # Assume for now
+    SECRET_LENGTH = 40  # Assume for now
     block = np.roll(block, -SECRET_LENGTH)
 
     frames = []
