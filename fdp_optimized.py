@@ -31,7 +31,7 @@ def encode(
         secret: bytes,
         block_size=512,
         iterations=20,
-        backwards_compatible=True) -> (ndarray, uint16):
+        backwards_compatible=True) -> (uint16, ndarray):
     """Perform PermuteFilterEcho hash"""
     block, state = block_from_secret(block_size, secret, backwards_compatible)
 
