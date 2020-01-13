@@ -97,8 +97,8 @@ UNECHO = array([
 
 if __name__ == '__main__':
     print("lookup_tables.py originally started as a way to share and")
-    print("declutter big tables of numbers at the top of files. Now, in a")
-    print("couple cases, it serves as a repository of precomputed numpy")
-    print("arrays to makecalculations with multidimensional arrays faster and")
-    print("easier tounderstand. The major exception is SHRINK, which existed")
-    print("here, but slowed down fdp_optimized by several orders of magnitude")
+    print("declutter big tables of numbers at the top of files. Now, in a few")
+    print("cases, it serves as a repository of precomputed numpy arrays to")
+    print("make calculations with multidimensional arrays faster and easier")
+    print("to understand. The major exception is SHRINK, which existed here,")
+    print("but slowed down fdp_optimized by several orders of magnitude")
